@@ -1,29 +1,31 @@
-name: zip_flows # 工作流程的名称
+名称: zip_flows # 工作流程的名称: zip_flows # 工作流程的名称
 
 on: 
   workflow_dispatch:  # 手动触发
   push: 
     paths: 
-      - '_worker.js' # 当 _worker.js 文件发生变动时触发
+      - '_worker.js' # 当 _worker.js 文件发生变动时触发'_worker.js' # 当 _worker.js 文件发生变动时触发
 
 permissions:
-  contents: write
+  内容：写: write
 
 jobs:
   package-and-commit: 
-    runs-on: ubuntu-latest # 运行环境，这里使用最新版本的 Ubuntu
+    运行环境：ubuntu-latest # 运行环境，这里使用最新版本的 Ubuntu: ubuntu-latest # 运行环境，这里使用最新版本的 Ubuntu
     steps: 
-    - name: Checkout Repository # 检出代码
-      uses: actions/checkout@v2 
+    - name: 检出代码name: Checkout Repository # 检出代码
+      用途：actions/checkout@v2: actions/checkout@v2 
 
-    - name: Zip the worker file # 将 _worker.js 文件打包成 worker.js.zip
-      run: zip _worker.js.zip _worker.js 
+    - name: Zip the worker file # 将 _worker.js 文件打包成 worker.js.zipname: Zip the worker file # 将 _worker.js 文件打包成 worker.js.zip
+      运行: zip _worker.js.zip _worker.js: zip _worker.js.zip _worker.js 
 
-    - name: Commit and push the packaged file # 提交并推送打包后的文件
-      uses: EndBug/add-and-commit@v7 
+    - name: 提交并推送打包后的文件name: Commit and push the packaged file # 提交并推送打包后的文件
+    - name: Discard any local changes to _worker.js.zip
+  run: git checkout -- _worker.js.zip
+      用途: EndBug/添加并提交@v7: EndBug/add-and-commit@v7 
       with:
-        add: '_worker.js.zip' 
-        message: 'Automatically package and commit _worker.js.zip' 
-        author_name: github-actions[bot] 
-        author_email: actions[bot]@users.noreply.github.com 
-        token: ${{ secrets.GH_TOKEN }} 
+        添加：' _worker.js.zip ': '_worker.js.zip' 
+        消息: '自动打包并提交 _worker.js.zip': 'Automatically package and commit _worker.js.zip' 
+        作者名称: github-actions[bot]: github-actions[bot] 
+        作者邮箱: actions[bot]@users.noreply.github.com: actions[bot]@users.noreply.github.com 
+        token: ${{ secrets.GH_TOKEN }}: ${{ secrets.GH_TOKEN }} 
