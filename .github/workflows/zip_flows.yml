@@ -19,14 +19,26 @@ jobs:
           fetch-depth: 0
           clean: true
 
-      - name: Ensure no leftover zip
+      - name: Ensure branch matches remote and workspace is pristine
         run: |
-          if [ -f "_worker.js.zip" ]; then
-            git checkout -- _worker.js.zip || rm -f _worker.js.zip
+          # Make sure we are on the correct branch and match remote
+          git fetch origin
+          git checkout "${{ github.ref_name }}" || true
+          git reset --hard "origin/${{ github.ref_name }}" || true
+          git clean -fdx
+
+      - name: Discard or remove any existing _worker.js.zip
+        run: |
+          # Try to discard local changes to the tracked file; if that fails remove it
+          if git ls-files --error-unmatch _worker.js.zip >/dev/null 2>&1; then
+            git checkout -- _worker.js.zip || git rm -f --ignore-unmatch _worker.js.zip || true
+          else
+            rm -f _worker.js.zip || true
           fi
 
       - name: Zip the worker file
-        run: zip -q _worker.js.zip _worker.js
+        run: |
+          zip -q _worker.js.zip _worker.js
 
       - name: Commit and push the packaged file
         uses: EndBug/add-and-commit@v7
@@ -35,4 +47,4 @@ jobs:
           message: 'Automatically package and commit _worker.js.zip'
           author_name: github-actions[bot]
           author_email: actions[bot]@users.noreply.github.com
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
